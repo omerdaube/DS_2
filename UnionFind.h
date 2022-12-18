@@ -5,6 +5,7 @@
 #ifndef DS_2_UNIONFIND_H
 #define DS_2_UNIONFIND_H
 
+template <class TreeData, class SetData>
 class Set;
 
 template <class TreeData>
@@ -17,74 +18,73 @@ public:
     void setFather(Tree* father) { this->father = father; };
 
 private:
-    Data data;
+    TreeData data;
     Tree* father;
 };
 
 template <class TreeData, class SetData>
 class TreeRoot:Tree<TreeData> {
 public:
-    TreeRoot(TreeData data, Set* set) : Tree<TreeData>(data, nullptr), set(set);
-    Set<SetData>* getSet() const { return this->set; };
-    void setSet(Set<SetData>* set) { this->set= set; };
+    TreeRoot(TreeData data, Set<TreeData, SetData>* set) : Tree<TreeData>(data, nullptr), set(set) {};
+    Set<TreeData, SetData>* getSet() const { return this->set; };
+    void setSet(Set<TreeData, SetData>* set) { this->set= set; };
 private:
-    Set* set;
+    Set<TreeData, SetData>* set;
 };
 
-template <class SetData>
+template <class TreeData, class SetData>
 class Set{
 public:
     Set(SetData data) : data(data), root(nullptr), num(1){};
     SetData getSetData() const { return this->data; };
-    TreeRoot* getTreeRoot() const { return this->root; };
+    TreeRoot<TreeData, SetData>* getTreeRoot() const { return this->root; };
     int getNum() const { return this->num; };
     void setSetData(SetData data) { this->data = data; };
-    void setRoot(TreeRoot* root) { this->root = root; };
+    void setTreeRoot(TreeRoot<TreeData, SetData>* root) { this->root = root; };
     void setNum(int num) { this->num = num; };
 private:
     SetData data;
-    TreeRoot* root;
+    TreeRoot<TreeData, SetData>* root;
     int num;
 };
 
 template <class TreeData, class SetData>
 class UnionFind {
-{
 private:
     Tree<TreeData>* treesArr;
-    Set<SetData>* setsArr;
+    Set<TreeData, SetData>* setsArr;
 public:
     UnionFind() {};
 
-    Set<SetData>* makeSet(int treeIdx, int setIdx, TreeData treeData, SetData setData)
+    TreeRoot<TreeData, SetData>* makeSet(int treeIdx, int setIdx, TreeData treeData, SetData setData)
     {
-        Set<SetData>* set = new Set<SetData>(setData);
-        TreeRoot* root = new TreeRoot(treeData, set);
+        Set<TreeData, SetData>* set = new Set<TreeData, SetData>(setData);
+        TreeRoot<TreeData, SetData>* root = new TreeRoot(treeData, set);
         set->setTreeRoot(root);
         treesArr[treeIdx] = root;
         setsArr[setIdx] = set;
-        return set;
+        return root;
     }
 
-    Set<SetData>* Find(treeIdx)
+    Set<TreeData, SetData>* Find(int treeIdx)
     {
-        Tree* root = treesArr[treeIdx];
+        Tree<TreeData>* root = treesArr[treeIdx];
         while ((root) && (root->getFather())) {
             root = root->getFather();
         }
-        Tree* tree = treesArr[treeIdx];
+        Tree<TreeData>* tree = treesArr[treeIdx];
         while ((root) && (root->getFather())) {
             tree->setFather(root);
         }
         return root->getSet();
     }
 
-    void removeSet(Set<SetData>* set, int setIdx)
+    void removeSet(Set<TreeData, SetData>* set, int setIdx)
     {
-        set->setData(NULL);
+        set->setData(nullptr);                          //////////////////////////////////////////////////////////////
     }
 
-    void Union(TreeRoot* r1, TreeRoot* r2)
+    void Union(TreeRoot<TreeData, SetData>* r1, TreeRoot<TreeData, SetData>* r2)
     {
         if (r1 == r2) {
             return;
