@@ -8,20 +8,24 @@
 template <class TreeData, class SetData>
 class Set;
 
-template <class TreeData>
+template <class TreeData, class SetData>
 class Tree {
 public:
-    Tree(TreeData data, Tree* father) : data(data), father(father) {};
+    Tree(TreeData data, Tree* father, Set<TreeData, SetData>* set) : data(data), father(father), set(set) {};
     TreeData getData() const { return this->data; };
     Tree* getFather() const { return this->father; };
     void setData(TreeData data) { this->data = data; };
     void setFather(Tree* father) { this->father = father; };
+    Set<TreeData, SetData>* getSet() const { return this->set; };
+    void setSet(Set<TreeData, SetData>* set) { this->set= set; };
 
 private:
     TreeData data;
     Tree* father;
+    Set<TreeData, SetData>* set;
 };
 
+/*
 template <class TreeData, class SetData>
 class TreeRoot:Tree<TreeData> {
 public:
@@ -31,35 +35,37 @@ public:
 private:
     Set<TreeData, SetData>* set;
 };
+*/
 
 template <class TreeData, class SetData>
 class Set{
 public:
+    //Set() : data(SetData()), root(nullptr), num(0) {};
     Set(SetData data) : data(data), root(nullptr), num(1){};
     SetData getSetData() const { return this->data; };
-    TreeRoot<TreeData, SetData>* getTreeRoot() const { return this->root; };
+    Tree<TreeData, SetData>* getTreeRoot() const { return this->root; };
     int getNum() const { return this->num; };
     void setSetData(SetData data) { this->data = data; };
-    void setTreeRoot(TreeRoot<TreeData, SetData>* root) { this->root = root; };
+    void setTreeRoot(Tree<TreeData, SetData>* root) { this->root = root; };
     void setNum(int num) { this->num = num; };
 private:
     SetData data;
-    TreeRoot<TreeData, SetData>* root;
+    Tree<TreeData, SetData>* root;
     int num;
 };
 
 template <class TreeData, class SetData>
 class UnionFind {
 private:
-    Tree<TreeData>* treesArr;
-    Set<TreeData, SetData>* setsArr;
+    Tree<TreeData, SetData>** treesArr;
+    Set<TreeData, SetData>** setsArr;
 public:
-    UnionFind() {};
+    UnionFind(Tree<TreeData, SetData>** treesArr, Set<TreeData, SetData>** setsArr) : treesArr(treesArr), setsArr(setsArr) {};
 
-    TreeRoot<TreeData, SetData>* makeSet(int treeIdx, int setIdx, TreeData treeData, SetData setData)
+    Tree<TreeData, SetData>* makeSet(int treeIdx, int setIdx, TreeData treeData, SetData setData)
     {
         Set<TreeData, SetData>* set = new Set<TreeData, SetData>(setData);
-        TreeRoot<TreeData, SetData>* root = new TreeRoot(treeData, set);
+        Tree<TreeData, SetData>* root = new Tree<TreeData, SetData>(treeData, nullptr, set);
         set->setTreeRoot(root);
         treesArr[treeIdx] = root;
         setsArr[setIdx] = set;
@@ -68,35 +74,43 @@ public:
 
     Set<TreeData, SetData>* Find(int treeIdx)
     {
-        Tree<TreeData>* root = treesArr[treeIdx];
+        Tree<TreeData, SetData>* root = treesArr[treeIdx];
         while ((root) && (root->getFather())) {
             root = root->getFather();
         }
-        Tree<TreeData>* tree = treesArr[treeIdx];
-        while ((root) && (root->getFather())) {
+        Tree<TreeData, SetData>* tree = treesArr[treeIdx];
+        Tree<TreeData, SetData>* prevFather;
+        while ((tree) && (tree->getFather())) {
+            prevFather = tree->getFather();
             tree->setFather(root);
+            tree = prevFather;
         }
         return root->getSet();
     }
 
     void removeSet(Set<TreeData, SetData>* set, int setIdx)
     {
-        set->setData(nullptr);                          //////////////////////////////////////////////////////////////
+        set->setSetData(SetData());                          //////////////////////////////////////////////////////////////
+        set->setTreeRoot(nullptr);
     }
 
-    void Union(TreeRoot<TreeData, SetData>* r1, TreeRoot<TreeData, SetData>* r2)
+    void Union(Tree<TreeData, SetData>* r1, Tree<TreeData, SetData>* r2, int set2idx, int set1idx)
     {
         if (r1 == r2) {
             return;
         }
-        if (r1->getNum() > r2->getNum()) {
+        if (r1->getSet()->getNum() > r2->getSet()->getNum()) {
             r2->setFather(r1);
-            removeSet(r2->getSet());
+            r1->getSet()->setNum(r1->getSet()->getNum() + r2->getSet()->getNum());
+            r2->getSet()->setNum(0);
+            removeSet(r2->getSet(), set2idx);
             r2->setSet(nullptr);
         }
         else {
             r1->setFather(r2);
-            removeSet(r1->getSet());
+            r2->getSet()->setNum(r2->getSet()->getNum() + r1->getSet()->getNum());
+            r1->getSet()->setNum(0);
+            removeSet(r1->getSet(), set1idx);
             r1->setSet(nullptr);
         }
     }
