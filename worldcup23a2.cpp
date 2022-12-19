@@ -1,12 +1,54 @@
 #include "worldcup23a2.h"
+
 using std::make_shared;
 
-int getHashPlayerID(shared_ptr<Player> p){
+int world_cup_t::getHashPlayerID(shared_ptr<Player> p){
     return p->getPlayerID();
 }
 
 
-world_cup_t::world_cup_t() : avlTeams(), rankAvlTeamsByAbility(), hashPlayers(&getHashPlayerID), numberOfTeams(0)
+world_cup_t::world_cup_t() : avlTeams(), rankAvlTeamsByAbility(), numberOfTeams(0),
+                                hashPlayers(Hash<shared_ptr<Player>, PlayersByID>(&getHashPlayerID)) {};
+
+void world_cup_t::Union(shared_ptr<Team> t1, shared_ptr<Team> t2)
+{
+    if (t1 == t2) {
+        return;
+    }
+    if (t1->getNumPlayers() >= t2->getNumPlayers()) {
+        t2->getRoot()->setExtraSpirit(((t1->getRoot()->getExtraSpirit()).inv())*(t1->getTeam)*(t2->getRoot()->getExtraSpirit()));
+        t2->getRoot()->setFather(t1->getRoot());
+        t2->getRoot()->setTeam(shared_ptr<Team>());
+        t1->setNumPlayers(t1->getNumPlayers() + t2->getNumPlayers());
+        t2->setRoot(nullptr);
+        t2 = shared_ptr<Team>();
+    }
+    else {
+        t1->getRoot()->setFather(t2->getRoot());
+        t1->getRoot()->setTeam(shared_ptr<Team>());
+        t2->setNumPlayers(t2->getNumPlayers() + t1->getNumPlayers());
+        t1->setRoot(nullptr);
+        t1 = shared_ptr<Team>();
+    }
+}
+
+shared_ptr<Team> world_cup_t::Find(int playerID)
+{
+    shared_ptr<Player> player = hashPlayers.find(playerID);
+    shared_ptr<Player> root = player;
+    while ((root) && (root->getFather())) {
+        root = root->getFather();
+    }
+    shared_ptr<Player> prevFather;
+    while ((player) && (player->getFather())) {
+        prevFather = player->getFather();
+        player->setFather(root);
+        player = prevFather;
+    }
+    return root->getTeam();
+}
+
+world_cup_t::world_cup_t()
 {
 }
 

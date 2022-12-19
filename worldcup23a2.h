@@ -16,6 +16,9 @@
 #define WORLDCUP23A2_H_
 
 #include "wet2util.h"
+#include "Team.h"
+#include "Player.h"
+
 #include "RankAVL.h"
 #include "PlayersByID.h"
 #include "Player.h"
@@ -26,9 +29,16 @@
 #include <memory>
 class world_cup_t {
 private:
+	//
+	// Here you may add anything you want
+	//
+    static int getHashPlayerID(shared_ptr<Player> p);
+
+	static void Union(shared_ptr<Team> t1, shared_ptr<Team> t2);
+    static shared_ptr<Team> Find(int playerID);
     AVL<shared_ptr<Team>, TeamsByID> avlTeams;
     RankAVL<shared_ptr<Team>, TeamsByAbility> rankAvlTeamsByAbility;
-    Hash<shared_ptr<Player>, PlayersByID> hashPlayers;
+    static Hash<shared_ptr<Player>, PlayersByID> hashPlayers;
     int numberOfTeams;
 public:
 	// <DO-NOT-MODIFY> {

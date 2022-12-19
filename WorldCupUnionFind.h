@@ -14,6 +14,8 @@ class WorldCupUnionFind : UnionFind<Player, Team> {
 
     int CalcExtraGames(int treeIdx);
 
+    int CalcExtraSpirit(int treeIdx);
+
 };
 
 #endif //DS_2_WORLDCUPUNIONFIND_H

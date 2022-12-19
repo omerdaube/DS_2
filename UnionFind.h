@@ -5,6 +5,8 @@
 #ifndef DS_2_UNIONFIND_H
 #define DS_2_UNIONFIND_H
 
+#include "Hash.h"
+
 template <class TreeData, class SetData>
 class Set;
 
@@ -54,32 +56,44 @@ private:
     int num;
 };
 
-template <class TreeData, class SetData>
+template <class TreeData, class SetData, class TreeCond, class SetCond>
 class UnionFind {
 protected:
-    Tree<TreeData, SetData>* treesArr[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
-    Set<TreeData, SetData>* setsArr[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
+    int (*getTreeDataID)(TreeData);
+    int (*getSetDataID)(SetData);
+    void (*setTreeDataTreeP)(TreeData, Tree<TreeData, SetData>*);
+    void (*setSetDataSetP)(SetData, Set<TreeData, SetData>*);
+    Hash<TreeData, TreeCond> treesArr;
+    Hash<SetData, SetCond> setsArr;
+    //Tree<TreeData, SetData>* treesArr[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
+    //Set<TreeData, SetData>* setsArr[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
 public:
     //UnionFind(Tree<TreeData, SetData>** treesArr, Set<TreeData, SetData>** setsArr) : treesArr(treesArr), setsArr(setsArr) {};
-    UnionFind() {};
+    UnionFind(int (*getTreeDataID)(TreeData), int (*getSetDataID)(SetData), void (*setTreeDataTreeP)(TreeData, Tree<TreeData, SetData>*),
+              void (*setSetDataSetP)(TreeData, Set<TreeData, SetData>*)) : getTreeDataID(getTreeDataID),
+                getSetDataID(getSetDataID), treesArr(Hash<TreeData, TreeCond>(getTreeDataID)),
+                setsArr(Hash<SetData, SetCond>(getSetDataID)), setTreeDataTreeP(setTreeDataTreeP),
+                setSetDataSetP(setSetDataSetP) {};
 
-    Tree<TreeData, SetData>* makeSet(int treeIdx, int setIdx, TreeData treeData, SetData setData)
+    Tree<TreeData, SetData>* makeSet(/*int treeIdx, int setIdx,*/ TreeData treeData, SetData setData)
     {
         Set<TreeData, SetData>* set = new Set<TreeData, SetData>(setData);
         Tree<TreeData, SetData>* root = new Tree<TreeData, SetData>(treeData, nullptr, set);
         set->setTreeRoot(root);
-        treesArr[treeIdx] = root;
-        setsArr[setIdx] = set;
+        setTreeDataTreeP(treeData, root);
+        setData.setTreeDataSetP(setData, set);
+        treesArr.add(treeData);//[treeIdx] = root;
+        setsArr.add(setData);//[setIdx] = set;
         return root;
     }
 
-    Set<TreeData, SetData>* Find(int treeIdx)
+    Set<TreeData, SetData>* Find(int id)//int treeIdx)
     {
-        Tree<TreeData, SetData>* root = treesArr[treeIdx];
+        Tree<TreeData, SetData>* root = treesArr.find(id);//treesArr[treeIdx];
         while ((root) && (root->getFather())) {
             root = root->getFather();
         }
-        Tree<TreeData, SetData>* tree = treesArr[treeIdx];
+        Tree<TreeData, SetData>* tree = treesArr//[treeIdx];
         Tree<TreeData, SetData>* prevFather;
         while ((tree) && (tree->getFather())) {
             prevFather = tree->getFather();
