@@ -7,6 +7,7 @@
 
 class Player {
 private:
+
     int extraGames;
 public:
     int getExtraGames() const;
