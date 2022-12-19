@@ -56,11 +56,12 @@ private:
 
 template <class TreeData, class SetData>
 class UnionFind {
-private:
-    Tree<TreeData, SetData>** treesArr;
-    Set<TreeData, SetData>** setsArr;
+protected:
+    Tree<TreeData, SetData>* treesArr[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
+    Set<TreeData, SetData>* setsArr[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
 public:
-    UnionFind(Tree<TreeData, SetData>** treesArr, Set<TreeData, SetData>** setsArr) : treesArr(treesArr), setsArr(setsArr) {};
+    //UnionFind(Tree<TreeData, SetData>** treesArr, Set<TreeData, SetData>** setsArr) : treesArr(treesArr), setsArr(setsArr) {};
+    UnionFind() {};
 
     Tree<TreeData, SetData>* makeSet(int treeIdx, int setIdx, TreeData treeData, SetData setData)
     {

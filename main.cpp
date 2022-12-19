@@ -15,7 +15,7 @@ int main()
 
     Tree<int, int>* arrTrees[17] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     Set<int, int>* arrSets[17] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
-    UnionFind<int, int> uniFin = UnionFind<int, int>(arrTrees, arrSets);
+    UnionFind<int, int> uniFin = UnionFind<int, int>();//(arrTrees, arrSets);
     Tree<int, int>* set19p = uniFin.makeSet(0, 0, 19, 190);
     Tree<int, int>* set81p = uniFin.makeSet(9, 9, 81, 810);
     Tree<int, int>* set82p = uniFin.makeSet(10, 10, 82, 820);
