@@ -61,7 +61,7 @@ public:
             AVL<Data, Cond>** a = static_cast<AVL<Data, Cond>*>(array[i])->avlToArr();
             int s = static_cast<AVL<Data, Cond>*>(array[i])->getSize(array[i]);
             for (int j = 0; j < s; ++j) {
-                static_cast<AVL<Data, Cond>*>(newAVL[h(getID(static_cast<AVL<int, sortint>*>(a[j])->getData()))])->add(static_cast<AVL<int, sortint>*>(a[j])->getData());
+                static_cast<AVL<Data, Cond>*>(newAVL[h(getID(static_cast<AVL<Data, Cond>*>(a[j])->getData()))])->add(static_cast<AVL<Data, Cond>*>(a[j])->getData());
                 delete a[j];
             }
             delete[] a;

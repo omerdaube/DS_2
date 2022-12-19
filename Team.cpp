@@ -10,3 +10,27 @@ int Team::getTeamID() {
 
 Team::Team(int id) : teamID(id), points(0), sumAbility(0), teamSpirit(permutation_t(def_per)), gamesPlayedAsTeam(0),
                      removed(false), numPlayers(0), numGoalKeepers(0){}
+
+int Team::getTeamAbility() {
+    return sumAbility;
+}
+
+int Team::getTeamPoints() {
+    return points;
+}
+
+bool Team::hasGoalKeeper() {
+    return (numGoalKeepers > 0);
+}
+
+void Team::gameWasPlayed() {
+    gamesPlayedAsTeam++;
+}
+
+void Team::addTeamPoints(int x) {
+    points += x;
+}
+
+int Team::getStrength() {
+    return teamSpirit.strength();
+}

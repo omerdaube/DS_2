@@ -13,4 +13,8 @@ Player::Player(int playerID, int teamID, int gamesPlayed, permutation_t spirit, 
                                   ability(ability), cards(cards), goalKeeper(goalKeeper) {}
 
 int Player::getExtraGames() const { return this->extraGames; };
-void Player::setExtraGames(int extraGames) { this->extraGames = extraGames; };
+void Player::setExtraGames(int extraGames) { this->extraGames = extraGames; }
+
+int Player::getCards() {
+    return cards;
+};

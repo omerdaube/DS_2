@@ -21,6 +21,12 @@ public:
 
     Team(int id);
     int getTeamID();
+    int getTeamAbility();
+    int getTeamPoints();
+    bool hasGoalKeeper();
+    void gameWasPlayed();
+    void addTeamPoints(int);
+    int getStrength();
 };
 
 

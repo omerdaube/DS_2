@@ -20,6 +20,7 @@ public:
     Player(int playerID, int teamID, int gamesPlayed, permutation_t spirit, int ability, int cards, bool goalKeeper);
     int getExtraGames() const;
     void setExtraGames(int extraGames);
+    int getCards();
 };
 
 #endif //DS_2_PLAYER_H

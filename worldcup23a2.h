@@ -16,17 +16,24 @@
 #define WORLDCUP23A2_H_
 
 #include "wet2util.h"
-
+#include "RankAVL.h"
+#include "PlayersByID.h"
+#include "Player.h"
+#include "TeamsByID.h"
+#include "Team.h"
+#include "TeamsByAbility.h"
+#include "Hash.h"
+#include <memory>
 class world_cup_t {
 private:
-	//
-	// Here you may add anything you want
-	//
-	
+    AVL<shared_ptr<Team>, TeamsByID> avlTeams;
+    RankAVL<shared_ptr<Team>, TeamsByAbility> rankAvlTeamsByAbility;
+    Hash<shared_ptr<Player>, PlayersByID> hashPlayers;
+    int numberOfTeams;
 public:
 	// <DO-NOT-MODIFY> {
-	
-	world_cup_t();
+
+    world_cup_t();
 	virtual ~world_cup_t();
 	
 	StatusType add_team(int teamId);
