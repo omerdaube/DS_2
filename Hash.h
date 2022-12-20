@@ -28,7 +28,13 @@ public:
             enlarge();
         }
     }
+    AVL<Data, Cond> ** getArray(){
+        return array;
+    }
 
+    int getSize(){
+        return maxSize;
+    }
 //    void remove(Data toAdd){
 //        AVL<Data,Cond>* p = static_cast<AVL<Data,Cond>*>(array[h(getID(toAdd))]);
 //        p->remove(toAdd);

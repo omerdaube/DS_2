@@ -14,7 +14,6 @@ class Player;
 
 class Team {
 private:
-    const int def_per[5] = {1, 2, 3, 4, 5};
     shared_ptr<Player> root;
     int teamID;
     int points;
@@ -35,10 +34,15 @@ public:
     void gameWasPlayed();
     void addTeamPoints(int);
     int getStrength();
+    void outOfGame();
+    bool isInGame();
     shared_ptr<Player> getRoot() const;
     int getNumPlayers() const;
+    void setNumPlayers(int x);
     void setRoot(shared_ptr<Player> root);
-    void setNumPlayers(int numPlayers);
+    void addedPlayer(int ability, permutation_t per);
+    void resetTeam();
+    void bought(shared_ptr<Team> t);
     void setTeamSpirit(permutation_t teamSpirit);
 };
 

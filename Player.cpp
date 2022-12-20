@@ -3,7 +3,7 @@
 //
 
 #include "Player.h"
-
+#include "Team.h"
 
 int Player::getPlayerID() {
     return playerID;
@@ -11,7 +11,7 @@ int Player::getPlayerID() {
 Player::Player(int playerID, shared_ptr<Team> team, int gamesPlayed, permutation_t spirit, int ability, int cards,
                bool goalKeeper) : playerID(playerID), team(team), gamesPlayed(gamesPlayed), extraSpirit(extraSpirit),
                                   ability(ability), cards(cards), goalKeeper(goalKeeper),
-                                  father(shared_ptr<Player>()) {};
+                                  father() {};
 
 int Player::getExtraGames() const { return this->extraGames; };
 permutation_t Player::getExtraSpirit() const { return this->extraSpirit; };
@@ -20,4 +20,16 @@ void Player::setExtraSpirit(permutation_t extraSpirit) { this->extraSpirit = ext
 
 int Player::getCards() {
     return cards;
-};
+}
+
+void Player::resetPlayer() {
+    if(team != nullptr){
+        team->resetTeam();
+    }
+    team = nullptr;
+    father = nullptr;
+}
+
+void Player::addCards(int c) {
+    cards += c;
+}

@@ -32,7 +32,6 @@ private:
 	//
 	// Here you may add anything you want
 	//
-    //static int getHashPlayerID(shared_ptr<Player> p);
 
 	void Union(shared_ptr<Player> root1, shared_ptr<Player> root2);
     shared_ptr<Team> Find(int playerID);
@@ -40,6 +39,7 @@ private:
     RankAVL<shared_ptr<Team>, TeamsByAbility> rankAvlTeamsByAbility;
     Hash<shared_ptr<Player>, PlayersByID> hashPlayers;
     int numberOfTeams;
+    void tryDelete();
 public:
 	// <DO-NOT-MODIFY> {
 

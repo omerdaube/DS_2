@@ -6,7 +6,6 @@ int getHashPlayerID(shared_ptr<Player> p){
     return p->getPlayerID();
 }
 
-
 void world_cup_t::Union(shared_ptr<Player> root1, shared_ptr<Player> root2)
 {
     if (root1 == root2) {
@@ -69,7 +68,26 @@ world_cup_t::~world_cup_t()
 {
     avlTeams.deleteAll2();
     rankAvlTeamsByAbility.deleteAll2();
+    tryDelete();
 }
+
+void removePointer(AVL<shared_ptr<Player>, PlayersByID>* a){
+    if(a == nullptr){
+        return;
+    }
+    removePointer(a->getLeft());
+    a->getData()->resetPlayer();
+    removePointer(a->getRight());
+}
+
+void world_cup_t::tryDelete(){
+    AVL<shared_ptr<Player>, PlayersByID> ** arr = hashPlayers.getArray();
+    int size = hashPlayers.getSize();
+    for (int i = 0; i < size; ++i) {
+        removePointer(arr[i]);
+    }
+}
+
 
 StatusType world_cup_t::add_team(int teamId)
 {
@@ -94,16 +112,39 @@ StatusType world_cup_t::remove_team(int teamId)
     if(ret == nullptr) {
         return StatusType::FAILURE;
     }
+    ret->getData()->outOfGame();
     avlTeams.remove(ret->getData());
     rankAvlTeamsByAbility.remove(ret->getData());
     numberOfTeams--;
+
     return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::add_player(int playerId, int teamId, const permutation_t &spirit, int gamesPlayed, int ability, int cards, bool goalKeeper)
 {
-	// TOO: Your goes here
-	return StatusType::SUCCESS;
+    if(playerId <= 0 || teamId <= 0 || !spirit.isvalid() || gamesPlayed < 0 || cards < 0){
+        return StatusType::ALLOCATION_ERROR;
+    }
+    AVL<shared_ptr<Team>, TeamsByID> *retT1 = avlTeams.search(teamId);
+    shared_ptr<Player> p = hashPlayers.find(playerId);
+    if (retT1 == nullptr || p != nullptr){
+        return StatusType::FAILURE;
+    }
+    shared_ptr<Player> newP = make_shared<Player>(playerId,
+                                                  retT1->getData(),
+                                                  gamesPlayed,
+                                                  spirit,
+                                                  ability,
+                                                  cards,
+                                                  goalKeeper);
+    if(retT1->getData()->getNumPlayers() > 0){
+        Union(retT1->getData()->getRoot(), p);
+    }
+    else{
+        retT1->getData()->setRoot(p);
+    }
+    retT1->getData()->addedPlayer(ability, spirit);
+    return StatusType::SUCCESS;
 }
 
 output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
@@ -145,12 +186,32 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
 
 output_t<int> world_cup_t::num_played_games_for_player(int playerId)
 {
-	return 22;
+    if(playerId <= 0){
+        return StatusType::INVALID_INPUT;
+    }
+    shared_ptr<Player> p = hashPlayers.find(playerId);
+    Find(playerId); //kivutz
+    if(p == nullptr){
+        return StatusType::FAILURE;
+    }
+    if(p->getFather() == nullptr){
+        return p->getExtraGames();
+    }
+    return p->getFather()->getExtraGames() + p->getExtraGames();
 }
 
 StatusType world_cup_t::add_player_cards(int playerId, int cards)
 {
-	return StatusType::SUCCESS;
+    if(cards < 0 || playerId <= 0){
+        return StatusType::INVALID_INPUT;
+    }
+    shared_ptr<Player> p = hashPlayers.find(playerId);
+    shared_ptr<Team> t = Find(playerId);
+    if(p == nullptr || !(t->isInGame())){
+        return StatusType::FAILURE;
+    }
+    p->addCards(cards);
+    return StatusType::SUCCESS;
 }
 
 output_t<int> world_cup_t::get_player_cards(int playerId)
@@ -187,10 +248,39 @@ output_t<int> world_cup_t::get_ith_pointless_ability(int i)
 
 output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 {
-	return permutation_t();
+    if(playerId <= 0){
+        return StatusType::INVALID_INPUT;
+    }
+    shared_ptr<Player> p = hashPlayers.find(playerId);
+    shared_ptr<Team> t = Find(playerId);
+    if(p == nullptr || !(t->isInGame())){
+        return StatusType::FAILURE;
+    }
+    if(p->getFather() == nullptr){
+        return p->getExtraSpirit();
+    }
+	return p->getFather()->getExtraSpirit() * p->getExtraSpirit();
 }
 
 StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 {
-	return StatusType::SUCCESS;
+	if(teamId1 == teamId2 || teamId1 <= 0 || teamId2 <= 0){
+        return StatusType::INVALID_INPUT;
+    }
+    AVL<shared_ptr<Team>, TeamsByID> *retT1 = avlTeams.search(teamId1);
+    AVL<shared_ptr<Team>, TeamsByID> *retT2 = avlTeams.search(teamId2);
+    if (retT1 == nullptr || retT2 == nullptr){
+        return StatusType::FAILURE;
+    }
+    shared_ptr<Team> t1 = retT1->getData();
+    shared_ptr<Team> t2 = retT2->getData();
+    avlTeams.remove(t2);
+    rankAvlTeamsByAbility.remove(t2);
+    rankAvlTeamsByAbility.remove(t1);
+    t2->resetTeam();
+    t2->outOfGame();
+    Union(t1->getRoot(), t2->getRoot());
+    t1->bought(t2);
+    rankAvlTeamsByAbility.add(t1);
+    return StatusType::SUCCESS;
 }

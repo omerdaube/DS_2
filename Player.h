@@ -36,6 +36,8 @@ public:
     void setTeam(shared_ptr<Team> team) {this->team = team; };
     void setFather(shared_ptr<Player> father) {this->father = father; };
     int getCards();
+    void addCards(int c);
+    void resetPlayer();
 };
 
 #endif //DS_2_PLAYER_H
