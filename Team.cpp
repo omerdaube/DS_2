@@ -4,7 +4,7 @@
 
 #include "Team.h"
 #include "Player.h"
-Team::Team(int id) : teamID(id), points(0), sumAbility(0), teamSpirit(), gamesPlayedAsTeam(0),
+Team::Team(int id) : root(nullptr), teamID(id), points(0), sumAbility(0), teamSpirit(permutation_t().neutral()),
                      removed(false), numPlayers(0), numGoalKeepers(0){}
 
 int Team::getTeamID()
@@ -45,7 +45,10 @@ bool Team::hasGoalKeeper() {
 }
 
 void Team::gameWasPlayed() {
-    gamesPlayedAsTeam++;
+    if(root == nullptr) {
+        return;
+    }
+    root->increaseGames();
 }
 
 void Team::addTeamPoints(int x) {
@@ -60,15 +63,13 @@ void Team::resetTeam() {
     root = nullptr;
 }
 
-void Team::addedPlayer(int ability, permutation_t per) {
+void Team::addedPlayer(int ability, permutation_t per, bool gk) {
     numPlayers++;
-    if(numPlayers <= 1){
-        teamSpirit = per;
-    }
-    else{
-        teamSpirit = teamSpirit * per;
-    }
+    teamSpirit = teamSpirit * per;
     sumAbility += ability;
+    if(gk){
+        numGoalKeepers++;
+    }
 }
 
 void Team::outOfGame() {
@@ -84,9 +85,9 @@ void Team::bought(shared_ptr<Team> t) {
     sumAbility += t->sumAbility;
     teamSpirit = teamSpirit * t->teamSpirit;
     numPlayers += t->numPlayers;
+    numGoalKeepers += t->numGoalKeepers;
+
 }
-
-
 
 void Team::setTeamSpirit(permutation_t teamSpirit)
 {

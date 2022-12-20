@@ -9,9 +9,9 @@ int Player::getPlayerID() {
     return playerID;
 }
 Player::Player(int playerID, shared_ptr<Team> team, int gamesPlayed, permutation_t spirit, int ability, int cards,
-               bool goalKeeper) : playerID(playerID), team(team), gamesPlayed(gamesPlayed), extraSpirit(extraSpirit),
+               bool goalKeeper) : playerID(playerID), team(team), extraGames(gamesPlayed), extraSpirit(spirit),
                                   ability(ability), cards(cards), goalKeeper(goalKeeper),
-                                  father() {};
+                                  father(nullptr) {};
 
 int Player::getExtraGames() const { return this->extraGames; };
 permutation_t Player::getExtraSpirit() const { return this->extraSpirit; };
@@ -32,4 +32,8 @@ void Player::resetPlayer() {
 
 void Player::addCards(int c) {
     cards += c;
+}
+
+void Player::increaseGames() {
+    extraGames++;
 }

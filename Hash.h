@@ -14,7 +14,7 @@ private:
     AVL<Data, Cond> ** array;
     int (*getID)(Data);
 public:
-    Hash(int (*getID)(Data)) : currentSize(), maxSize(2), array(new AVL<Data, Cond>*[maxSize]), getID(getID)
+    Hash(int (*getID)(Data)) : currentSize(), maxSize(500), array(new AVL<Data, Cond>*[maxSize]), getID(getID)
     {
         for (int i = 0; i < maxSize; ++i) {
             array[i] = new AVL<Data, Cond>();

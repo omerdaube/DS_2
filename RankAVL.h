@@ -281,14 +281,24 @@ public:
             if (this->left->BF() >= 0) {
                 LL();
                 //printf("LL%d ", this->nodeData);
-                calcW(right);
-                calcW(this);
+                if(right != nullptr) {
+                    calcW(right);
+                }
+                if(left != nullptr) {
+                    calcW(left);
+                }                calcW(this);
                 if(father != nullptr) {
                     calcW(father);
                 }
             }
             else {
                 LR();
+                if(right != nullptr) {
+                    calcW(right);
+                }
+                if(left != nullptr) {
+                    calcW(left);
+                }
                 //printf("LR%d ", this->nodeData);
                 calcW(this);
                 if(father != nullptr) {
@@ -300,14 +310,24 @@ public:
             if (this->right->BF() <= 0) {
                 RR();
                 //printf("RR%d ", this->nodeData);
-                calcW(left);
-                calcW(this);
+                if(right != nullptr) {
+                    calcW(right);
+                }
+                if(left != nullptr) {
+                    calcW(left);
+                }                calcW(this);
                 if(father != nullptr) {
                     calcW(father);
                 }
             }
             else {
                 RL();
+                if(right != nullptr) {
+                    calcW(right);
+                }
+                if(left != nullptr) {
+                    calcW(left);
+                }
                 //printf("RL%d ", this->nodeData);
                 calcW(this);
                 if(father!= nullptr){

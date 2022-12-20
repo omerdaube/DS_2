@@ -17,7 +17,6 @@ private:
     int playerID;
     shared_ptr<Team> team;
     shared_ptr<Player> father;
-    int gamesPlayed;
     permutation_t extraSpirit;
     int ability;
     int cards;
@@ -38,6 +37,7 @@ public:
     int getCards();
     void addCards(int c);
     void resetPlayer();
+    void increaseGames();
 };
 
 #endif //DS_2_PLAYER_H

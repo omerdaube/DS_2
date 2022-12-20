@@ -19,12 +19,10 @@ private:
     int points;
     int sumAbility;
     permutation_t teamSpirit;
-    int gamesPlayedAsTeam;
     bool removed;
     int numPlayers;
     int numGoalKeepers;
 public:
-
     Team(int id);
     int getTeamID();
     permutation_t getTeamSpirit() const;
@@ -40,7 +38,7 @@ public:
     int getNumPlayers() const;
     void setNumPlayers(int x);
     void setRoot(shared_ptr<Player> root);
-    void addedPlayer(int ability, permutation_t per);
+    void addedPlayer(int ability, permutation_t per, bool gk);
     void resetTeam();
     void bought(shared_ptr<Team> t);
     void setTeamSpirit(permutation_t teamSpirit);
