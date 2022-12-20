@@ -1,4 +1,3 @@
-#include "UnionFind.h"
 #include "worldcup23a2.h"
 #include <iostream>
 using std::cout;

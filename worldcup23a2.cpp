@@ -2,13 +2,10 @@
 
 using std::make_shared;
 
-int world_cup_t::getHashPlayerID(shared_ptr<Player> p){
+int getHashPlayerID(shared_ptr<Player> p){
     return p->getPlayerID();
 }
 
-
-world_cup_t::world_cup_t() : avlTeams(), rankAvlTeamsByAbility(), numberOfTeams(0),
-                                hashPlayers(Hash<shared_ptr<Player>, PlayersByID>(&getHashPlayerID)) {};
 
 void world_cup_t::Union(shared_ptr<Player> root1, shared_ptr<Player> root2)
 {
@@ -64,7 +61,7 @@ shared_ptr<Team> world_cup_t::Find(int playerID)
     return root->getTeam();
 }
 
-world_cup_t::world_cup_t()
+world_cup_t::world_cup_t() : avlTeams(), rankAvlTeamsByAbility(), hashPlayers(&getHashPlayerID), numberOfTeams(0)
 {
 }
 

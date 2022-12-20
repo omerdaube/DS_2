@@ -17,7 +17,6 @@ int Player::getExtraGames() const { return this->extraGames; };
 permutation_t Player::getExtraSpirit() const { return this->extraSpirit; };
 void Player::setExtraGames(int extraGames) { this->extraGames = extraGames; };
 void Player::setExtraSpirit(permutation_t extraSpirit) { this->extraSpirit = extraSpirit; };
-void Player::setExtraGames(int extraGames) { this->extraGames = extraGames; }
 
 int Player::getCards() {
     return cards;

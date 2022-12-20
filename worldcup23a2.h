@@ -32,13 +32,13 @@ private:
 	//
 	// Here you may add anything you want
 	//
-    static int getHashPlayerID(shared_ptr<Player> p);
+    //static int getHashPlayerID(shared_ptr<Player> p);
 
 	void Union(shared_ptr<Player> root1, shared_ptr<Player> root2);
     shared_ptr<Team> Find(int playerID);
     AVL<shared_ptr<Team>, TeamsByID> avlTeams;
     RankAVL<shared_ptr<Team>, TeamsByAbility> rankAvlTeamsByAbility;
-    static Hash<shared_ptr<Player>, PlayersByID> hashPlayers;
+    Hash<shared_ptr<Player>, PlayersByID> hashPlayers;
     int numberOfTeams;
 public:
 	// <DO-NOT-MODIFY> {
