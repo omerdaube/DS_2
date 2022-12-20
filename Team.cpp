@@ -4,12 +4,18 @@
 
 #include "Team.h"
 
-int Team::getTeamID() {
+Team::Team(int id) : teamID(id), points(0), sumAbility(0), teamSpirit(permutation_t(def_per)), gamesPlayedAsTeam(0),
+                     removed(false), numPlayers(0), numGoalKeepers(0){}
+
+int Team::getTeamID()
+{
     return teamID;
 }
 
-Team::Team(int id) : teamID(id), points(0), sumAbility(0), teamSpirit(permutation_t(def_per)), gamesPlayedAsTeam(0),
-                     removed(false), numPlayers(0), numGoalKeepers(0){}
+permutation_t Team::getTeamSpirit() const
+{
+    return this->teamSpirit;
+}
 
 shared_ptr<Player> Team::getRoot() const
 {
@@ -52,4 +58,9 @@ void Team::addTeamPoints(int x) {
 
 int Team::getStrength() {
     return teamSpirit.strength();
+}
+
+void Team::setTeamSpirit(permutation_t teamSpirit)
+{
+    this->teamSpirit = teamSpirit;
 }

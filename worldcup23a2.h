@@ -34,8 +34,8 @@ private:
 	//
     static int getHashPlayerID(shared_ptr<Player> p);
 
-	static void Union(shared_ptr<Team> t1, shared_ptr<Team> t2);
-    static shared_ptr<Team> Find(int playerID);
+	void Union(shared_ptr<Player> root1, shared_ptr<Player> root2);
+    shared_ptr<Team> Find(int playerID);
     AVL<shared_ptr<Team>, TeamsByID> avlTeams;
     RankAVL<shared_ptr<Team>, TeamsByAbility> rankAvlTeamsByAbility;
     static Hash<shared_ptr<Player>, PlayersByID> hashPlayers;

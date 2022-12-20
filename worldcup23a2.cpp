@@ -10,25 +10,29 @@ int world_cup_t::getHashPlayerID(shared_ptr<Player> p){
 world_cup_t::world_cup_t() : avlTeams(), rankAvlTeamsByAbility(), numberOfTeams(0),
                                 hashPlayers(Hash<shared_ptr<Player>, PlayersByID>(&getHashPlayerID)) {};
 
-void world_cup_t::Union(shared_ptr<Team> t1, shared_ptr<Team> t2)
+void world_cup_t::Union(shared_ptr<Player> root1, shared_ptr<Player> root2)
 {
-    if (t1 == t2) {
+    if (root1 == root2) {
         return;
     }
-    if (t1->getNumPlayers() >= t2->getNumPlayers()) {
-        t2->getRoot()->setExtraSpirit(((t1->getRoot()->getExtraSpirit()).inv())*(t1->getTeam)*(t2->getRoot()->getExtraSpirit()));
-        t2->getRoot()->setFather(t1->getRoot());
-        t2->getRoot()->setTeam(shared_ptr<Team>());
-        t1->setNumPlayers(t1->getNumPlayers() + t2->getNumPlayers());
-        t2->setRoot(nullptr);
-        t2 = shared_ptr<Team>();
+    if (root1->getTeam()->getNumPlayers() >= root2->getTeam()->getNumPlayers()) {
+        root2->setExtraGames(root2->getExtraGames() - root1->getExtraGames());
+        root2->setExtraSpirit(((root1->getExtraSpirit()).inv())*(root1->getTeam()->getTeamSpirit())*(root2->getExtraSpirit()));
+        root2->setFather(root1);
+        root2->setTeam(shared_ptr<Team>());
+        root1->getTeam()->setNumPlayers(root1->getTeam()->getNumPlayers() + root2->getTeam()->getNumPlayers());
+        root2->getTeam()->setRoot(nullptr);
+        root2->setTeam(shared_ptr<Team>());
     }
     else {
-        t1->getRoot()->setFather(t2->getRoot());
-        t1->getRoot()->setTeam(shared_ptr<Team>());
-        t2->setNumPlayers(t2->getNumPlayers() + t1->getNumPlayers());
-        t1->setRoot(nullptr);
-        t1 = shared_ptr<Team>();
+        root1->setExtraGames(root1->getExtraGames() - root2->getExtraGames());
+        root2->setExtraSpirit((root1->getTeam()->getTeamSpirit())*(root2->getExtraSpirit()));
+        root1->setExtraSpirit(((root2->getExtraSpirit()).inv())*(root1->getExtraSpirit()));
+        root1->setFather(root2);
+        root1->setTeam(shared_ptr<Team>());
+        root2->getTeam()->setNumPlayers(root2->getTeam()->getNumPlayers() + root1->getTeam()->getNumPlayers());
+        root1->getTeam()->setRoot(nullptr);
+        root1->setTeam(shared_ptr<Team>());
     }
 }
 
@@ -36,12 +40,24 @@ shared_ptr<Team> world_cup_t::Find(int playerID)
 {
     shared_ptr<Player> player = hashPlayers.find(playerID);
     shared_ptr<Player> root = player;
+    permutation_t mul = root->getExtraSpirit();
+    int sum = root->getExtraGames();
     while ((root) && (root->getFather())) {
         root = root->getFather();
+        mul = (root->getExtraSpirit())*mul;
+        sum += root->getExtraGames();
     }
     shared_ptr<Player> prevFather;
+    permutation_t oldSpirit;
+    int oldSum;
     while ((player) && (player->getFather())) {
         prevFather = player->getFather();
+        oldSum = player->getExtraGames();
+        player->setExtraGames(sum);
+        sum -= oldSum;
+        oldSpirit = player->getExtraSpirit();
+        player->setExtraSpirit(mul);
+        mul = mul*(oldSpirit.inv());
         player->setFather(root);
         player = prevFather;
     }

@@ -28,6 +28,7 @@ public:
 
     Team(int id);
     int getTeamID();
+    permutation_t getTeamSpirit() const;
     int getTeamAbility();
     int getTeamPoints();
     bool hasGoalKeeper();
@@ -38,6 +39,7 @@ public:
     int getNumPlayers() const;
     void setRoot(shared_ptr<Player> root);
     void setNumPlayers(int numPlayers);
+    void setTeamSpirit(permutation_t teamSpirit);
 };
 
 
