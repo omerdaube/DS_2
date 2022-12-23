@@ -172,20 +172,25 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
     team2->gameWasPlayed();
     if(team1->getTeamPoints() + team1->getTeamAbility() > team2->getTeamPoints() + team2->getTeamAbility()) {
         team1->addTeamPoints(3);
+        return output_t(1);
     }
     else if(team1->getTeamPoints() + team1->getTeamAbility() < team2->getTeamPoints() + team2->getTeamAbility()) {
         team2->addTeamPoints(3);
+        return output_t(3);
     }
     else{
         if(team1->getStrength() > team2->getStrength()){
             team1->addTeamPoints(3);
+            return output_t(2);
         }
         else if(team1->getStrength() < team2->getStrength()){
             team2->addTeamPoints(3);
+            return output_t(4);
         }
         else{
             team1->addTeamPoints(1);
             team2->addTeamPoints(1);
+            return output_t(0);
         }
     }
     return StatusType::SUCCESS;}
