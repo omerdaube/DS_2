@@ -139,6 +139,8 @@ StatusType world_cup_t::add_player(int playerId, int teamId, const permutation_t
         return StatusType::FAILURE;
     }
     shared_ptr<Team> t = retT1->getData();
+    rankAvlTeamsByAbility.remove(t);
+
     shared_ptr<Player> newP = make_shared<Player>(playerId, retT1->getData(), gamesPlayed, spirit, ability, cards, goalKeeper);
     if(t->getNumPlayers() > 0){
         Union(t->getRoot(), newP);
@@ -148,7 +150,6 @@ StatusType world_cup_t::add_player(int playerId, int teamId, const permutation_t
     }
     t->addedPlayer(ability, spirit, goalKeeper);
     hashPlayers.add(newP);
-    rankAvlTeamsByAbility.remove(t);
     rankAvlTeamsByAbility.add(t);
     return StatusType::SUCCESS;
 }
@@ -172,23 +173,29 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
     team2->gameWasPlayed();
     if(team1->getTeamPoints() + team1->getTeamAbility() > team2->getTeamPoints() + team2->getTeamAbility()) {
         team1->addTeamPoints(3);
+        return 1;
     }
     else if(team1->getTeamPoints() + team1->getTeamAbility() < team2->getTeamPoints() + team2->getTeamAbility()) {
         team2->addTeamPoints(3);
+        return 3;
     }
     else{
         if(team1->getStrength() > team2->getStrength()){
             team1->addTeamPoints(3);
+            return 2;
         }
         else if(team1->getStrength() < team2->getStrength()){
             team2->addTeamPoints(3);
+            return 4;
         }
         else{
             team1->addTeamPoints(1);
             team2->addTeamPoints(1);
+            return 0;
         }
     }
-    return StatusType::SUCCESS;}
+    return StatusType::SUCCESS;
+}
 
 output_t<int> world_cup_t::num_played_games_for_player(int playerId)
 {

@@ -286,7 +286,8 @@ public:
                 }
                 if(left != nullptr) {
                     calcW(left);
-                }                calcW(this);
+                }
+                calcW(this);
                 if(father != nullptr) {
                     calcW(father);
                 }
@@ -315,7 +316,8 @@ public:
                 }
                 if(left != nullptr) {
                     calcW(left);
-                }                calcW(this);
+                }
+                calcW(this);
                 if(father != nullptr) {
                     calcW(father);
                 }
