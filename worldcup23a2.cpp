@@ -262,6 +262,7 @@ output_t<int> world_cup_t::get_ith_pointless_ability(int i)
     }
     shared_ptr<Team> t = rankAvlTeamsByAbility.select(i+1);
 	return t->getTeamID();
+   // return 0;
 }
 
 output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
@@ -299,6 +300,23 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
     rankAvlTeamsByAbility.remove(t2);
     rankAvlTeamsByAbility.remove(t1);
     //t2->resetTeam();
+    //didnt check if team empty
+    if(t2->getNumPlayers() <= 0){
+        numberOfTeams--;
+        t2->outOfGame();
+        rankAvlTeamsByAbility.add(t1);
+        return StatusType::SUCCESS;
+    }
+    if(t1->getNumPlayers() <= 0){
+        t2->getRoot()->setTeam(t1);
+        t1->setRoot(t2->getRoot());
+        t2->setRoot(nullptr);
+        t2->outOfGame();
+        t1->bought(t2);
+        rankAvlTeamsByAbility.add(t1);
+        numberOfTeams--;
+        return StatusType::SUCCESS;
+    }
     Union(t1->getRoot(), t2->getRoot());
     t2->outOfGame();
     t1->bought(t2);
