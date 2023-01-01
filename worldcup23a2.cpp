@@ -79,6 +79,7 @@ world_cup_t::~world_cup_t()
 
 void removePointer(AVL<shared_ptr<Player>, PlayersByID>* a){
     if(a == nullptr){
+    if(a == nullptr){
         return;
     }
     removePointer(a->getLeft());
@@ -131,7 +132,7 @@ StatusType world_cup_t::remove_team(int teamId)
 StatusType world_cup_t::add_player(int playerId, int teamId, const permutation_t &spirit, int gamesPlayed, int ability, int cards, bool goalKeeper)
 {
     if(playerId <= 0 || teamId <= 0 || !spirit.isvalid() || gamesPlayed < 0 || cards < 0){
-        return StatusType::ALLOCATION_ERROR;
+        return StatusType::INVALID_INPUT;
     }
     AVL<shared_ptr<Team>, TeamsByID> *retT1 = avlTeams.search(teamId);
     shared_ptr<Player> p = hashPlayers.find(playerId);
