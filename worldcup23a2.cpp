@@ -79,7 +79,6 @@ world_cup_t::~world_cup_t()
 
 void removePointer(AVL<shared_ptr<Player>, PlayersByID>* a){
     if(a == nullptr){
-    if(a == nullptr){
         return;
     }
     removePointer(a->getLeft());
