@@ -267,21 +267,23 @@ output_t<int> world_cup_t::get_ith_pointless_ability(int i)
 
 output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 {
-    if(playerId <= 0){
-        return StatusType::INVALID_INPUT;
-    }
-    shared_ptr<Player> p = hashPlayers.find(playerId);
-    if(p== nullptr){
-        return StatusType::FAILURE;
-    }
-    shared_ptr<Team> t = Find(playerId);
-    if(!(t->isInGame())){
-        return StatusType::FAILURE;
-    }
-    if(p->getFather() == nullptr){
-        return p->getExtraSpirit();
-    }
-	return p->getFather()->getExtraSpirit() * p->getExtraSpirit();
+//    if(playerId <= 0){
+//        return StatusType::INVALID_INPUT;
+//    }
+//    shared_ptr<Player> p = hashPlayers.find(playerId);
+//    if(p== nullptr){
+//        return StatusType::FAILURE;
+//    }
+//    shared_ptr<Team> t = Find(playerId);
+//    if(!(t->isInGame())){
+//        return StatusType::FAILURE;
+//    }
+//    if(p->getFather() == nullptr){
+//        return p->getExtraSpirit();
+//    }
+//	return p->getFather()->getExtraSpirit() * p->getExtraSpirit();
+    permutation_t y;
+return  y.neutral();
 }
 
 StatusType world_cup_t::buy_team(int teamId1, int teamId2)
