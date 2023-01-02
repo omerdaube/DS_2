@@ -257,12 +257,12 @@ output_t<int> world_cup_t::get_team_points(int teamId)
 
 output_t<int> world_cup_t::get_ith_pointless_ability(int i)
 {
-//    if(0 > i || i >= numberOfTeams || numberOfTeams <= 0){
-//        return StatusType::FAILURE;
-//    }
-//    shared_ptr<Team> t = rankAvlTeamsByAbility.select(i+1);
-//	return t->getTeamID();
-    return 0;
+    if(0 > i || i >= numberOfTeams || numberOfTeams <= 0){
+        return StatusType::FAILURE;
+    }
+    shared_ptr<Team> t = rankAvlTeamsByAbility.select(i+1);
+	return t->getTeamID();
+    //return 0;
 }
 
 output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
