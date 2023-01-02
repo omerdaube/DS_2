@@ -262,7 +262,7 @@ output_t<int> world_cup_t::get_ith_pointless_ability(int i)
     }
     shared_ptr<Team> t = rankAvlTeamsByAbility.select(i+1);
 	return t->getTeamID();
-    //return 0;
+   // return 0;
 }
 
 output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
@@ -282,7 +282,6 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
         return p->getExtraSpirit();
     }
 	return p->getFather()->getExtraSpirit() * p->getExtraSpirit();
-
 }
 
 StatusType world_cup_t::buy_team(int teamId1, int teamId2)
